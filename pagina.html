@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para el Amor de mi Vida</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        /* Pantalla de bienvenida */
+        .welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            cursor: pointer;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .welcome-screen.hidden {
+            opacity: 0;
+            transform: scale(1.2);
+            pointer-events: none;
+        }
+
+        .big-heart {
+            font-size: 150px;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            10%, 30% {
+                transform: scale(1.2);
+            }
+            20%, 40% {
+                transform: scale(1);
+            }
+        }
+
+        .welcome-text {
+            margin-top: 30px;
+            color: white;
+            font-size: 28px;
+            font-style: italic;
+            text-align: center;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+
+        .arrows-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .arrow {
+            position: absolute;
+            font-size: 60px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-200px, -60px);
+            animation: pointToHeart 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pointToHeart {
+            0%, 100% {
+                transform: translate(-200px, -60px);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(-180px, -60px);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* Contenedor principal - oculto inicialmente */
+        .main-content {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
+        }
+
+        .main-content.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .container {
+            background: rgba(255, 248, 240, 0.95);
+            border-radius: 30px;
+            padding: 50px;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .text-content {
+            color: #5d4037;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: #c2185b;
+            font-weight: normal;
+        }
+
+        .message {
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #6d4c41;
+        }
+
+        .love-text {
+            font-size: 20px;
+            font-style: italic;
+            margin: 25px 0;
+            color: #e91e63;
+            text-align: right;
+        }
+
+        .counter {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid rgba(194, 24, 91, 0.2);
+        }
+
+        .counter-title {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #6d4c41;
+        }
+
+        .time-display {
+            font-size: 28px;
+            font-weight: bold;
+            color: #c2185b;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tree-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .tree {
+            position: relative;
+            width: 300px;
+            height: 400px;
+        }
+
+        .trunk {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-10%);
+            width: 30px;
+            height: 100px;
+            background: linear-gradient(to bottom, #8d6e63, #6d4c41);
+            border-radius: 5px;
+            z-index: 1;
+        }
+
+        .heart-cloud {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 270px;
+        }
+
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            animation: float 3s ease-in-out infinite;
+            z-index: 3;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: "";
+            position: absolute;
+            width: 10px;
+            height: 16px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .heart::before {
+            left: 0;
+            transform: rotate(-45deg);
+            transform-origin: 100% 100%;
+        }
+
+        .heart::after {
+            left: 10px;
+            transform: rotate(45deg);
+            transform-origin: 0 100%;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-10px) scale(1.05);
+            }
+        }
+
+        .falling-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .falling-heart {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            opacity: 0;
+            animation: fall linear infinite;
+        }
+
+        .falling-heart::before,
+        .falling-heart::after {
+            content: "";
+            position: absolute;
+            width: 7.5px;
+            height: 12px;
+            background: #ff69b4;
+            border-radius: 7.5px 7.5px 0 0;
+        }
+
+        .falling-heart::before {
+            left: 0;
+            transform: rotate(-45deg);
+            transform-origin: 100% 100%;
+        }
+
+        .falling-heart::after {
+            left: 7.5px;
+            transform: rotate(45deg);
+            transform-origin: 0 100%;
+        }
+
+        @keyframes fall {
+            0% {
+                top: -10%;
+                opacity: 0.8;
+            }
+            100% {
+                top: 110%;
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .container {
+                padding: 30px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .message {
+                font-size: 16px;
+            }
+
+            .tree-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Pantalla de bienvenida -->
+    <div class="welcome-screen" id="welcomeScreen">
+        <div class="arrows-container">
+            <div class="arrow">👉</div>
+        </div>
+        <div class="big-heart">❤️</div>
+        <div class="welcome-text">Haz click aquí</div>
+    </div>
+
+    <div class="falling-hearts" id="fallingHearts"></div>
+    
+    <div class="container main-content" id="mainContent">
+        <div class="content-wrapper">
+            <div class="text-content">
+                <h1>Para el amor de mi vida:</h1>
+                
+                <div class="message">
+                    Si pudiera elegir un lugar seguro, sería a tu lado.
+                </div>
+                
+                <div class="message">
+                    Cuanto más tiempo estoy contigo más te amo.
+                </div>
+                
+                <div class="love-text">
+                    — I Love You!
+                </div>
+                
+                <div class="counter">
+                    <div class="counter-title">Mi amor por ti comenzó hace...</div>
+                    <div class="time-display" id="timeCounter">
+                        <span id="days">0</span> días 
+                        <span id="hours">00</span> horas 
+                        <span id="minutes">00</span> minutos 
+                        <span id="seconds">00</span> segundos
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tree-container">
+                <div class="tree">
+                    <div class="trunk"></div>
+                    <div class="heart-cloud" id="heartCloud"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Manejo de la pantalla de bienvenida
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const mainContent = document.getElementById('mainContent');
+
+        welcomeScreen.addEventListener('click', function() {
+            welcomeScreen.classList.add('hidden');
+            setTimeout(() => {
+                mainContent.classList.add('visible');
+            }, 300);
+        });
+
+        // Fecha de inicio - 26 de mayo de 2019
+        // Formato: new Date('YYYY-MM-DD HH:MM:SS')
+        const startDate = new Date('2019-05-26 00:00:00');
+
+        // Función para actualizar el contador
+        function updateCounter() {
+            const now = new Date();
+            const diff = now - startDate;
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+
+        // Generar corazones en el árbol usando ecuación paramétrica mejorada
+        function generateTreeHearts() {
+            const heartCloud = document.getElementById('heartCloud');
+            const colors = ['#ff1744', '#f50057', '#ff4081', '#ff80ab', '#f8bbd0', '#e91e63'];
+            const numHearts = 180;
+
+            for (let i = 0; i < numHearts; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                
+                // Ecuación paramétrica del corazón: x = 16sin³(t), y = 13cos(t) - 5cos(2t) - 2cos(3t) - cos(4t)
+                const t = (Math.PI * 2 * i) / numHearts;
+                
+                // Escala ajustada para mejor visualización
+                const scale = 7;
+                const x = scale * 16 * Math.pow(Math.sin(t), 3);
+                const y = -scale * (13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+                
+                // Crear múltiples capas de corazones para llenar el interior
+                const layers = 5;
+                const layerIndex = i % layers;
+                const fillFactor = 0.2 + (layerIndex / layers) * 0.8; // De 20% a 100%
+                
+                const finalX = x * fillFactor + 150;
+                const finalY = y * fillFactor + 135;
+                
+                heart.style.left = finalX + 'px';
+                heart.style.top = finalY + 'px';
+                heart.style.animationDelay = (Math.random() * 3) + 's';
+                
+                // Variar tamaños ligeramente
+                const size = 0.8 + Math.random() * 0.4;
+                heart.style.transform = `scale(${size})`;
+                
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                const style = document.createElement('style');
+                style.textContent = `
+                    .heart:nth-child(${i + 1})::before,
+                    .heart:nth-child(${i + 1})::after {
+                        background: ${color};
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                heartCloud.appendChild(heart);
+            }
+        }
+
+        // Generar corazones cayendo
+        function createFallingHeart() {
+            const container = document.getElementById('fallingHearts');
+            const heart = document.createElement('div');
+            heart.className = 'falling-heart';
+            
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            heart.style.animationDelay = Math.random() * 2 + 's';
+            
+            container.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 8000);
+        }
+
+        // Inicializar
+        updateCounter();
+        setInterval(updateCounter, 1000);
+        generateTreeHearts();
+        
+        setInterval(createFallingHeart, 800);
+    </script>
+</body>
+</html>
